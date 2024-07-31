@@ -39,35 +39,45 @@ class Solution:
     
     
     def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+        ## if there is only one list, return that list
         if not list1:
             return list2
         if not list2:
             return list1
-        ptr_one: ListNode = list1
-        ptr_two: ListNode = list2
-        initial_check = False
-        while ptr_one.next is not None and ptr_two.next is not None:
-            if initial_check is False:
-                if ptr_one.val >= ptr_two.val:
-                    head_ptr = ptr_one
-                else:
-                    head_ptr = ptr_two
-            initial_check = True
-            if ptr_one.val > ptr_two.val:
-                print("ptr one larger or equal to ptr two")
-                temp_head = ptr_two.next
-                ptr_two.next = ptr_one
-                ptr_one = temp_head
-                print(f"pointer one value {ptr_one.val}, pointer two {ptr_two.val}")
+        ## keeping track of the head of the merged list as wont be able to return to it
+        new_list: ListNode = ListNode(val=None, next=None)
+        head_new_list = new_list
+        ## head of new list only needs to be initialized
+        while True:
+            ## if list 1 value is lower than list 2 value, then list 1 value should go next
+            ## move the list 1 head to the next item in list
+            ## if there are no more items in the list, we can add teh remaining list 2 items
+            print(list1.val, list2.val)
+            if list1.val < list2.val:
+                new_list.next = list1
+                list1 = list1.next
+                if list1 is None:
+                    new_list = new_list.next
+                    new_list.next = list2
+                    break
             else:
-                print("ptr 2 smaller tahn 1")
-                temp_head = ptr_one.next
-                ptr_one.next = ptr_two
-                ptr_two = temp_head
-                print(f"pointer one value {ptr_one.val}, pointer two {ptr_two.val}")
-        print(head_ptr)
-        return head_ptr
-
+                new_list.next = list2
+                list2 = list2.next
+                if list2 is None:
+                    new_list = new_list.next
+                    new_list.next = list1
+                    break
+            new_list = new_list.next
+            
+            
+        current_node = head_new_list
+        while current_node:
+            print(current_node.val)
+            current_node = current_node.next
+        return head_new_list.next
+            
+            
+            
 solution = Solution()
-list_nodes = solution.initializeLinkedList(list1 = [1,2,4], list2 = [1,3,4])
+list_nodes = solution.initializeLinkedList(list1 = [1,2,4], list2 = [1,3, 4])
 solution.mergeTwoLists(list_nodes[0], list_nodes[1])
